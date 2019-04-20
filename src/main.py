@@ -32,22 +32,25 @@ for s, sleep in enumerate(sleeps):
 # binning logic int(x/24*48)
 def chunk(sleep):
     begin, end = sleep
-    slots = list(range(begin, end+1))
+    chunks_asleep = list(range(begin, end+1))
+    print(chunks_asleep)
+    slots = list(map(lambda x: int(x/24*48), chunks_asleep))
     return slots
 
 # historam counts
 hist = [0]*48
 for sleep in sleeps:
     for slot in chunk(sleep):
-        hist[slot] += 1
+        # hist[slot] += 1
+        sleep
 
-# debug views
-print(data2.head())
-print('\n DataAsleep:')
-print(dataAsleep.head())
-print('\nDataAwake:')
-print(dataAwake.head())
-print('\nSleeps:')
-pprint(sleeps[0:4])
-print('\nHist:')
-print(hist)
+# # debug views
+# print(data2.head())
+# print('\n DataAsleep:')
+# print(dataAsleep.head())
+# print('\nDataAwake:')
+# print(dataAwake.head())
+# print('\nSleeps:')
+# pprint(sleeps[0:4])
+# print('\nHist:')
+# print(hist)

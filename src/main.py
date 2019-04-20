@@ -1,5 +1,5 @@
 import pandas as pd
-import datetime as dt
+from datetime import datetime as dt
 from pprint import pprint
 
 # set display preferences to max
@@ -22,10 +22,24 @@ sleeps = pd.concat([dataAsleep[1], dataAwake[1]], axis=1, keys=['Asleep', 'Awake
 # convert to list 
 sleeps = sleeps.values.tolist()
 
+# psudo time conversion
+for s, sleep in enumerate(sleeps):
+    for t, time in enumerate(sleep):
+        hour, minute, second = time.split(':')
+        fraction_of_day = (int(hour)*3600 + int(minute)*60 + int(second))/86400 * 48
+        sleeps[s][t] = int(fraction_of_day)
+
 # binning logic int(x/24*48)
+def chunk(sleep):
+    begin, end = sleep
+    slots = list(range(begin, end+1))
+    return slots
 
-
-
+# historam counts
+hist = [0]*48
+for sleep in sleeps:
+    for slot in chunk(sleep):
+        hist[slot] += 1
 
 # debug views
 print(data2.head())
@@ -35,3 +49,5 @@ print('\nDataAwake:')
 print(dataAwake.head())
 print('\nSleeps:')
 pprint(sleeps[0:4])
+print('\nHist:')
+print(hist)

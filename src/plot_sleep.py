@@ -11,7 +11,7 @@ def csv2list(f):
     return samples, data
 
 
-with open('AutoSleep.csv') as f:
+with open('../csvs/AutoSleep.csv') as f:
     samples, data = csv2list(f)
 
 
@@ -59,5 +59,8 @@ for bins in bins_list:
         counts[bin] += 1
 
 norm_counts = list(map(lambda x: x / samples, counts))
-plt.bar(list(range(0, 48)), norm_counts)
+
+fig1, bar1 = plt.subplots()
+bar1.bar(list(range(0, 48)), norm_counts)
 plt.show()
+fig1.savefig('../figs/Figure_1.png', dpi='figure')

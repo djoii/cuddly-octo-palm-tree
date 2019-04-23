@@ -35,9 +35,8 @@ fractional_sleeps = [
 
 def binning(dt):
     if dt[0] < dt[1]:
-        return list(range(dt[0], dt[1] + 1))
-    else:
-        return list(range(dt[0], dt[1] + 1, -1))
+        dt[1] = dt[1] + 48
+    return [x % 48 for x in range(dt[0], dt[1] + 1)]
 
 
 bins_list = [binning(fractional_sleep)

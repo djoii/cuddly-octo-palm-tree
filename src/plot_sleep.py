@@ -15,43 +15,33 @@ with open('../csvs/AutoSleep.csv') as f:
     samples, data = csv2list(f)
 
 
-def declutter(r, l):
+def declutter(r):
     short_row = list(itertools.islice(r, 2))
     split_row = [x.split() for x in short_row]
-    joind_row = [split_row[0][1], split_row[1][1]]
-    l.append(joind_row)
+    return [split_row[0][1], split_row[1][1]]
 
 
-sleeps = []
-for row in data:
-    declutter(row, sleeps)
+sleeps = [declutter(row) for row in data]
 
 
-def psudotime(t, l):
+def psudotime(t):
     hour, minute, second = t.split(':')
-    fraction_of_day = (
-        int(hour) * 3600 + int(minute) * 60 + int(second)) / 86400 * 48
-    l.append(int(fraction_of_day))
+    return int((int(hour) * 3600 + int(minute) * 60 + int(second)) / 86400 * 48)
 
 
-fractional_sleeps = []
-for sleep in sleeps:
-    fractions_of_day = []
-    for time in sleep:
-        fraction_of_day = psudotime(time, fractions_of_day)
-    fractional_sleeps.append(fractions_of_day)
+fractional_sleeps = [
+    [psudotime(time) for time in sleep] for sleep in sleeps]
 
 
-def binning(dt, l):
+def binning(dt):
     start = min(dt)
     end = max(dt)
-    bins = list(range(start, end + 1))
-    l.append(bins)
+    return list(range(start, end + 1))
 
 
-bins_list = []
-for fractional_sleep in fractional_sleeps:
-    binning(fractional_sleep, bins_list)
+bins_list = [binning(fractional_sleep)
+             for fractional_sleep in fractional_sleeps]
+
 
 counts = [0] * 48
 for bins in bins_list:
@@ -59,7 +49,6 @@ for bins in bins_list:
         counts[bin] += 1
 
 norm_counts = list(map(lambda x: x / samples, counts))
-
 fig1, bar1 = plt.subplots()
 bar1.bar(list(range(0, 48)), norm_counts)
 plt.show()
